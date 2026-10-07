@@ -52,6 +52,12 @@ La aplicación tiene tres roles. Los permisos se validan **siempre en el servido
 - La base es el dinero disponible de la cartera. Cambia con adiciones y retiros del administrador, con los recaudos, con las ventas (capital entregado) y con los gastos.
 - El cierre muestra: base inicial, recaudos (efectivo y transferencia), ventas, gastos, adiciones, retiros y total del día.
 
+## Reglas adicionales
+
+- Los ajustes de la base **requieren el día abierto**, igual que pagos, ventas y gastos.
+- Un pago, gasto o crédito solo se modifica **el mismo día** en que se registró.
+- Una venta **no se bloquea** si la base es insuficiente: la base queda en negativo y se muestra en rojo.
+
 ## Suposiciones que conviene confirmar
 
 La descripción original deja algunos puntos abiertos; se resolvieron así y cada uno se cambia con una línea en `permissions.ts`:

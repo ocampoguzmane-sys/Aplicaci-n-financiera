@@ -4,13 +4,17 @@
   "private": true,
   "description": "API de la aplicación financiera: clientes, créditos, pagos, gastos, base, día y reportes con roles.",
   "type": "module",
-  "engines": { "node": ">=22.18" },
+  "engines": {
+    "node": ">=22.18"
+  },
   "scripts": {
     "start": "node --disable-warning=ExperimentalWarning src/server.ts",
     "dev": "node --disable-warning=ExperimentalWarning --watch src/server.ts",
     "test": "node --disable-warning=ExperimentalWarning --test \"test/**/*.test.ts\"",
     "typecheck": "tsc --noEmit",
-    "crear-admin": "node --disable-warning=ExperimentalWarning src/cli/crear-admin.ts"
+    "crear-admin": "node --disable-warning=ExperimentalWarning src/cli/crear-admin.ts",
+    "exportar-permisos": "node --disable-warning=ExperimentalWarning src/cli/exportar-permisos.ts",
+    "respaldo": "node --disable-warning=ExperimentalWarning src/cli/respaldo.ts"
   },
   "dependencies": {
     "@fastify/cors": "^11.0.0",

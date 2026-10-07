@@ -23,6 +23,18 @@ async function venderCliente(identificacion = CLIENTE.identificacion, credito = 
 const MEDIANOCHE_COLOMBIA = '2026-10-07T05:00:00.000Z'; // 00:00 del 7-oct en Bogotá
 
 describe('el día', () => {
+  it('acepta POST sin cuerpo aunque el cliente envíe content-type JSON (como hace la app)', async () => {
+    const r = await e.app.inject({ method: 'POST', url: '/api/v1/dia/abrir', headers: { authorization: `Bearer ${e.token.admin}`, 'content-type': 'application/json' } });
+    assert.equal(r.statusCode, 200, r.body);
+    const cerrar = await e.app.inject({ method: 'POST', url: '/api/v1/dia/cerrar', headers: { authorization: `Bearer ${e.token.admin}`, 'content-type': 'application/json' }, payload: '' });
+    assert.equal(cerrar.statusCode, 200, cerrar.body);
+  });
+
+  it('rechaza claves peligrosas en el JSON', async () => {
+    const r = await e.app.inject({ method: 'POST', url: '/api/v1/auth/login', headers: { 'content-type': 'application/json' }, payload: '{"codigo":"T1","usuario":"admin","contrasena":"x","__proto__":{"rol":"administrador"}}' });
+    assert.equal(r.statusCode, 400);
+  });
+
   it('sin día abierto no se puede registrar nada', async () => {
     const h = { 'x-cartera-id': String(e.ids.norte) };
     esperar(await e.api(e.token.empleado, 'POST', '/api/v1/clientes', CLIENTE), 409, 'DIA_CERRADO');

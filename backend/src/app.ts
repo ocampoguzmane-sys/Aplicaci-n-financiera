@@ -28,6 +28,14 @@ export async function construirApp(opciones: OpcionesApp): Promise<FastifyInstan
     await app.register(cors, { origin: opciones.config.corsOrigenes, methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], allowedHeaders: ['Authorization', 'Content-Type', 'X-Cartera-Id'] });
   }
 
+  // Los clientes suelen enviar `content-type: application/json` también en POST sin cuerpo (p. ej. abrir el día).
+  // Se acepta el cuerpo vacío y se conserva la protección contra claves peligrosas como `__proto__`.
+  const parsearJson = app.getDefaultJsonParser('error', 'error');
+  app.addContentTypeParser('application/json', { parseAs: 'string' }, (req, cuerpo, hecho) => {
+    if (typeof cuerpo === 'string' && cuerpo.trim() === '') return hecho(null, undefined);
+    parsearJson(req, cuerpo as string, hecho);
+  });
+
   app.addHook('onSend', async (_req, respuesta) => {
     respuesta.header('Cache-Control', 'no-store');
     respuesta.header('X-Content-Type-Options', 'nosniff');

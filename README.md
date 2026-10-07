@@ -7,8 +7,8 @@ Basada en el análisis del sistema de referencia (ver [docs/radiografia.md](docs
 | Carpeta | Contenido |
 |---|---|
 | [`backend/`](backend) | API REST (Node.js 22 + TypeScript + SQLite). Autenticación, permisos por rol, reglas de negocio y pruebas. |
-| `app/` | Aplicación Flutter para Android, iOS y Windows. |
-| [`docs/`](docs) | Radiografía del sistema de referencia y especificación de roles. |
+| [`app/`](app) | Aplicación Flutter para Android, iOS y Windows. |
+| [`docs/`](docs) | Radiografía del sistema de referencia, roles, arquitectura y despliegue. |
 
 ## Roles
 
@@ -51,3 +51,19 @@ Variables de entorno:
 | `NODE_ENV` | `production` activa las exigencias de producción. | |
 
 La API está documentada por sus rutas en `backend/src/rutas.ts` (prefijo `/api/v1`). En las peticiones de administrador y supervisor, la cartera se elige con la cabecera `X-Cartera-Id`.
+
+## App
+
+Requisitos: [Flutter](https://docs.flutter.dev/get-started/install) 3.47 o superior.
+
+```bash
+cd app
+flutter pub get
+flutter analyze
+flutter test
+flutter run -d windows --dart-define=API_URL=http://localhost:3000   # o -d android / -d ios
+```
+
+Más detalle en [app/README.md](app/README.md). Para publicar, ver [docs/despliegue.md](docs/despliegue.md); la arquitectura y las decisiones están en [docs/arquitectura.md](docs/arquitectura.md).
+
+El flujo de CI (`.github/workflows/ci.yml`) prueba el backend y la app, y compila Android, Windows e iOS.
