@@ -1,0 +1,21 @@
+# Dependencias y compilados
+node_modules/
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+*.iml
+.idea/
+.vscode/
+
+# Datos y secretos locales
+.env
+.env.*
+*.db
+*.db-*
+data/
+*.jks
+*.keystore
+key.properties

@@ -1,0 +1,25 @@
+{
+  "name": "financiera-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "API de la aplicación financiera: clientes, créditos, pagos, gastos, base, día y reportes con roles.",
+  "type": "module",
+  "engines": { "node": ">=22.18" },
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning src/server.ts",
+    "dev": "node --disable-warning=ExperimentalWarning --watch src/server.ts",
+    "test": "node --disable-warning=ExperimentalWarning --test \"test/**/*.test.ts\"",
+    "typecheck": "tsc --noEmit",
+    "crear-admin": "node --disable-warning=ExperimentalWarning src/cli/crear-admin.ts"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.0.0",
+    "fastify": "^5.0.0",
+    "jose": "^6.0.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.0"
+  }
+}
