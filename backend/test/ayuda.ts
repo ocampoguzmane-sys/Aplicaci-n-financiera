@@ -31,7 +31,7 @@ export interface Entorno {
 export async function nuevoEntorno(): Promise<Entorno> {
   const db = abrirDb(':memory:');
   const reloj = relojFijo(INICIO);
-  const config: Config = { ...cargarConfig({ NODE_ENV: 'test', JWT_SECRET: 'j'.repeat(40) } as NodeJS.ProcessEnv), corsOrigenes: false };
+  const config: Config = { ...cargarConfig({ NODE_ENV: 'test', JWT_SECRET: 'j'.repeat(40) } as NodeJS.ProcessEnv), corsOrigenes: false, webDir: null };
   const app = await construirApp({ db, config, reloj });
   const deps: Deps = { db, config, reloj };
 

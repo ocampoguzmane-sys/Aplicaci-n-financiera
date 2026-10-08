@@ -1,0 +1,34 @@
+# Publicación con un clic en Render (https://render.com): crea el servicio, el disco de datos y las variables.
+# Guía paso a paso en docs/web.md.
+services:
+  - type: web
+    name: financiera
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: starter            # los datos necesitan un disco persistente; el plan gratuito no lo permite
+    healthCheckPath: /salud
+    autoDeploy: true         # cada cambio que se una a la rama principal se publica solo
+    disk:
+      name: datos
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true  # secreto aleatorio para firmar las sesiones
+      # Primer administrador. Se piden al crear el servicio y se usan solo en el primer arranque:
+      # después de entrar por primera vez, elimina ADMIN_CLAVE desde el panel de Render.
+      - key: ADMIN_CODIGO    # código de la empresa que se escribe al iniciar sesión (por ejemplo, 1001)
+        sync: false
+      - key: ADMIN_EMPRESA   # nombre de la empresa
+        sync: false
+      - key: ADMIN_USUARIO   # usuario del administrador
+        sync: false
+      - key: ADMIN_NOMBRE    # nombre completo del administrador
+        sync: false
+      - key: ADMIN_CLAVE     # contraseña inicial (mínimo 8 caracteres, con letras y números)
+        sync: false
+      - key: ADMIN_CARTERA   # nombre de la primera cartera o ruta
+        value: Principal

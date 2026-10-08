@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +39,9 @@ class _PantallaLoginState extends State<PantallaLogin> {
   }
 
   Future<void> _entrar() async {
-    if (_codigo.text.trim().isEmpty || _usuario.text.trim().isEmpty || _clave.text.isEmpty) {
+    if (_codigo.text.trim().isEmpty ||
+        _usuario.text.trim().isEmpty ||
+        _clave.text.isEmpty) {
       setState(() => _error = 'Escribe el código, el usuario y la contraseña.');
       return;
     }
@@ -47,7 +50,12 @@ class _PantallaLoginState extends State<PantallaLogin> {
       _error = null;
     });
     try {
-      await context.read<Sesion>().iniciar(codigo: _codigo.text, usuario: _usuario.text, clave: _clave.text, url: _url.text);
+      await context.read<Sesion>().iniciar(
+        codigo: _codigo.text,
+        usuario: _usuario.text,
+        clave: _clave.text,
+        url: _url.text,
+      );
     } on ApiError catch (e) {
       if (mounted) setState(() => _error = e.mensaje);
     } finally {
@@ -70,29 +78,61 @@ class _PantallaLoginState extends State<PantallaLogin> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Icon(Icons.account_balance_wallet_outlined, size: 56, color: tema.colorScheme.primary),
+                    Icon(
+                      Icons.account_balance_wallet_outlined,
+                      size: 56,
+                      color: tema.colorScheme.primary,
+                    ),
                     const SizedBox(height: 12),
-                    Text('Financiera', textAlign: TextAlign.center, style: tema.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700)),
+                    Text(
+                      'Financiera',
+                      textAlign: TextAlign.center,
+                      style: tema.textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                     const SizedBox(height: 4),
-                    Text('Ingresa tus credenciales para acceder', textAlign: TextAlign.center, style: TextStyle(color: tema.colorScheme.onSurfaceVariant)),
+                    Text(
+                      'Ingresa tus credenciales para acceder',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: tema.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
                     const SizedBox(height: 28),
                     if (aviso != null) ...[
-                      Card(color: tema.colorScheme.tertiaryContainer, child: Padding(padding: const EdgeInsets.all(12), child: Text(aviso))),
+                      Card(
+                        color: tema.colorScheme.tertiaryContainer,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Text(aviso),
+                        ),
+                      ),
                       const SizedBox(height: 12),
                     ],
                     TextField(
                       controller: _codigo,
                       keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.next,
-                      decoration: const InputDecoration(labelText: 'Código', prefixIcon: Icon(Icons.business_outlined)),
-                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z0-9._-]'))],
+                      decoration: const InputDecoration(
+                        labelText: 'Código',
+                        prefixIcon: Icon(Icons.business_outlined),
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                          RegExp(r'[A-Za-z0-9._-]'),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 12),
                     TextField(
                       controller: _usuario,
                       textInputAction: TextInputAction.next,
                       autofillHints: const [AutofillHints.username],
-                      decoration: const InputDecoration(labelText: 'Usuario', prefixIcon: Icon(Icons.person_outline)),
+                      decoration: const InputDecoration(
+                        labelText: 'Usuario',
+                        prefixIcon: Icon(Icons.person_outline),
+                      ),
                     ),
                     const SizedBox(height: 12),
                     TextField(
@@ -104,35 +144,63 @@ class _PantallaLoginState extends State<PantallaLogin> {
                         labelText: 'Contraseña',
                         prefixIcon: const Icon(Icons.lock_outline),
                         suffixIcon: IconButton(
-                          tooltip: _ver ? 'Ocultar contraseña' : 'Mostrar contraseña',
-                          icon: Icon(_ver ? Icons.visibility_off : Icons.visibility),
+                          tooltip: _ver
+                              ? 'Ocultar contraseña'
+                              : 'Mostrar contraseña',
+                          icon: Icon(
+                            _ver ? Icons.visibility_off : Icons.visibility,
+                          ),
                           onPressed: () => setState(() => _ver = !_ver),
                         ),
                       ),
                     ),
                     if (_error != null) ...[
                       const SizedBox(height: 12),
-                      Text(_error!, style: TextStyle(color: tema.colorScheme.error), textAlign: TextAlign.center),
+                      Text(
+                        _error!,
+                        style: TextStyle(color: tema.colorScheme.error),
+                        textAlign: TextAlign.center,
+                      ),
                     ],
                     const SizedBox(height: 20),
                     FilledButton(
                       onPressed: _ocupado ? null : _entrar,
-                      child: _ocupado ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)) : const Text('Ingresar'),
+                      child: _ocupado
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Text('Ingresar'),
                     ),
                     const SizedBox(height: 8),
-                    TextButton.icon(
-                      onPressed: () => setState(() => _servidor = !_servidor),
-                      icon: Icon(_servidor ? Icons.expand_less : Icons.dns_outlined, size: 18),
-                      label: const Text('Servidor'),
-                    ),
-                    if (_servidor)
+                    if (!kIsWeb)
+                      TextButton.icon(
+                        onPressed: () => setState(() => _servidor = !_servidor),
+                        icon: Icon(
+                          _servidor ? Icons.expand_less : Icons.dns_outlined,
+                          size: 18,
+                        ),
+                        label: const Text('Servidor'),
+                      ),
+                    if (_servidor && !kIsWeb)
                       TextField(
                         controller: _url,
                         keyboardType: TextInputType.url,
-                        decoration: const InputDecoration(labelText: 'Dirección del servidor', helperText: 'Ejemplo: https://api.miempresa.com'),
+                        decoration: const InputDecoration(
+                          labelText: 'Dirección del servidor',
+                          helperText: 'Ejemplo: https://api.miempresa.com',
+                        ),
                       ),
                     const SizedBox(height: 16),
-                    Text('V. 1.0.0', textAlign: TextAlign.center, style: TextStyle(fontSize: 12, color: tema.colorScheme.outline)),
+                    Text(
+                      'V. 1.0.0',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: tema.colorScheme.outline,
+                      ),
+                    ),
                   ],
                 ),
               ),

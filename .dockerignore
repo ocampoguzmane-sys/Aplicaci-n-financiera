@@ -1,0 +1,15 @@
+.git
+.github
+**/node_modules
+**/.dart_tool
+**/build
+docs
+*.md
+**/*.db
+**/*.db-*
+backend/data
+backend/test
+app/test
+app/android
+app/ios
+app/windows

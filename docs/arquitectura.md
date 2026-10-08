@@ -2,11 +2,14 @@
 
 ```
 ┌─────────────────────────┐        HTTPS + JWT        ┌──────────────────────────────┐
-│  App Flutter            │ ────────────────────────► │  API REST (Node 22 + TS)     │
-│  Android · iOS · Windows│   /api/v1/...             │  permisos por rol · reglas   │
-│  (y web para pruebas)   │ ◄──────────────────────── │  SQLite (archivo)            │
-└─────────────────────────┘                           └──────────────────────────────┘
+│  App Flutter            │ ────────────────────────► │  Servidor (Node 22 + TS)     │
+│  Navegador (web, PWA)   │   /api/v1/...             │  API · permisos por rol      │
+│  Android · iOS · Windows│ ◄──────────────────────── │  entrega la web en "/"       │
+└─────────────────────────┘                           │  SQLite (archivo en /data)   │
+                                                      └──────────────────────────────┘
 ```
+
+**Web:** la misma app Flutter se compila a web y el servidor la entrega junto con la API, bajo una sola dirección: no hay CORS ni direcciones que configurar. La imagen Docker (`Dockerfile`) compila ambas partes; el servidor corre sin privilegios y el disco de datos se monta en `/data`. La web lleva política de contenido (CSP) estricta: todo del mismo origen, sin scripts de terceros.
 
 ## Principios
 

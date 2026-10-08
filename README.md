@@ -1,6 +1,6 @@
 # Aplicación financiera
 
-Gestión de **créditos por cuotas con cobro en ruta**: clientes, ventas a crédito, pagos, gastos, base de dinero y cierre diario, con tres roles (administrador, supervisor y empleado). Cliente móvil y de escritorio para **Android, iOS y Windows**.
+Gestión de **créditos por cuotas con cobro en ruta**: clientes, ventas a crédito, pagos, gastos, base de dinero y cierre diario, con tres roles (administrador, supervisor y empleado). Se usa **desde el navegador con un enlace** (sin instalar nada) y también como app para **Android, iOS y Windows**.
 
 Basada en el análisis del sistema de referencia (ver [docs/radiografia.md](docs/radiografia.md)).
 
@@ -9,6 +9,7 @@ Basada en el análisis del sistema de referencia (ver [docs/radiografia.md](docs
 | [`backend/`](backend) | API REST (Node.js 22 + TypeScript + SQLite). Autenticación, permisos por rol, reglas de negocio y pruebas. |
 | [`app/`](app) | Aplicación Flutter para Android, iOS y Windows. |
 | [`docs/`](docs) | Radiografía del sistema de referencia, roles, arquitectura y despliegue. |
+| `Dockerfile`, `render.yaml` | Empaquetado para publicar la web y el servidor bajo una sola dirección. |
 
 ## Roles
 
@@ -67,3 +68,13 @@ flutter run -d windows --dart-define=API_URL=http://localhost:3000   # o -d andr
 Más detalle en [app/README.md](app/README.md). Para publicar, ver [docs/despliegue.md](docs/despliegue.md); la arquitectura y las decisiones están en [docs/arquitectura.md](docs/arquitectura.md).
 
 El flujo de CI (`.github/workflows/ci.yml`) prueba el backend y la app, y compila Android, Windows e iOS.
+
+## Publicar como aplicación web
+
+El servidor entrega también la web, de modo que todo vive bajo **una sola dirección** (la web en `/`, la API en `/api/v1`). Para publicarla sin conocimientos técnicos, sigue [docs/web.md](docs/web.md): con el archivo `render.yaml` se crea con pocos clics. Para comprobar una publicación:
+
+```bash
+scripts/prueba-humo.sh https://tu-enlace.onrender.com CODIGO USUARIO CONTRASEÑA
+```
+
+Variables nuevas del servidor: `WEB_DIR` (carpeta de la web compilada; se detecta sola) y, para el primer arranque sin consola, `ADMIN_CODIGO`, `ADMIN_EMPRESA`, `ADMIN_USUARIO`, `ADMIN_NOMBRE`, `ADMIN_CLAVE` y `ADMIN_CARTERA`.

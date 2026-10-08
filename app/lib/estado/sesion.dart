@@ -82,7 +82,8 @@ class Sesion extends ChangeNotifier {
   String get urlServidor => api.baseUrl;
 
   Future<void> restaurar() async {
-    api.baseUrl = await almacen.leer('url') ?? urlPorDefecto;
+    // En la web la dirección es siempre la de la propia página; en el resto, la última usada.
+    api.baseUrl = kIsWeb ? urlPorDefecto : (await almacen.leer('url') ?? urlPorDefecto);
     final token = await almacen.leer('token');
     if (token == null) {
       estado = EstadoSesion.sinSesion;

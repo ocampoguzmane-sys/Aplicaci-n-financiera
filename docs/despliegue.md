@@ -1,5 +1,7 @@
 # Puesta en marcha
 
+> **¿Solo quieres un enlace web?** Sigue [web.md](web.md): publica la web y el servidor juntos con pocos clics. Esta guía es la versión técnica (servidor propio y apps nativas).
+
 ## 1. Servidor (backend)
 
 Requisitos: Node.js 22.18 o superior.

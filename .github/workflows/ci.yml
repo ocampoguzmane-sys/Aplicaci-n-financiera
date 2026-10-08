@@ -57,6 +57,40 @@ jobs:
       - run: flutter analyze
       - run: flutter test
 
+  contenedor:
+    name: Imagen web + servidor (Docker)
+    needs: [backend, app]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      # La imagen compila la web con Flutter dentro: es la misma que se publica.
+      - name: Construir la imagen
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          tags: financiera:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Arrancar y verificar
+        run: |
+          docker run -d --name financiera -p 3000:3000 \
+            -e JWT_SECRET="$(head -c 36 /dev/urandom | base64)" \
+            -e ADMIN_CODIGO=1001 -e ADMIN_EMPRESA="Empresa de prueba" \
+            -e ADMIN_USUARIO=admin -e ADMIN_NOMBRE="Administrador" -e ADMIN_CLAVE=Clave2026seg \
+            financiera:ci
+          for i in $(seq 1 30); do curl -fs localhost:3000/salud >/dev/null && break; sleep 1; done
+          scripts/prueba-humo.sh http://localhost:3000 1001 admin Clave2026seg
+      - name: El servidor no corre como administrador del sistema
+        run: |
+          uid="$(docker exec financiera sh -c "awk '/^Uid:/ {print \$2}' /proc/1/status")"
+          echo "uid del proceso: $uid"
+          test "$uid" != "0"
+      - name: Registro del contenedor (si algo falló)
+        if: failure()
+        run: docker logs financiera
+
   android:
     name: Android (APK y AAB)
     needs: app

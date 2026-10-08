@@ -28,3 +28,18 @@ export function crearEmpresaConAdministrador(
     return { empresaId, carteraId, usuarioId };
   });
 }
+
+export type ResultadoAltaInicial = 'creada' | 'ya-existe' | 'sin-variables';
+
+/**
+ * Primer arranque en un alojamiento sin consola: si la base está vacía y existen las variables
+ * ADMIN_CODIGO, ADMIN_EMPRESA, ADMIN_USUARIO, ADMIN_NOMBRE y ADMIN_CLAVE, crea la empresa y su administrador.
+ * Si la base ya tiene una empresa, no hace nada (las variables se pueden y se deben quitar después).
+ */
+export function altaInicialDesdeEntorno(db: Db, env: NodeJS.ProcessEnv): ResultadoAltaInicial {
+  if (uno(db, 'SELECT id FROM empresas LIMIT 1')) return 'ya-existe';
+  const { ADMIN_CODIGO: codigo, ADMIN_EMPRESA: empresa, ADMIN_USUARIO: usuario, ADMIN_NOMBRE: nombre, ADMIN_CLAVE: clave } = env;
+  if (!codigo || !empresa || !usuario || !nombre || !clave) return 'sin-variables';
+  crearEmpresaConAdministrador(db, { codigo, empresa, carteraNombre: env.ADMIN_CARTERA || 'Principal', usuario, nombre, clave });
+  return 'creada';
+}

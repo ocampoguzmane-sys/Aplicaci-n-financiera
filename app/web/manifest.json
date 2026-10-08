@@ -1,12 +1,12 @@
 {
-    "name": "financiera_app",
-    "short_name": "financiera_app",
-    "start_url": ".",
+    "name": "Financiera",
+    "short_name": "Financiera",
+    "start_url": "/",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
+    "background_color": "#F9F9FF",
+    "theme_color": "#3B6FB6",
     "description": "Aplicación financiera: créditos por cuotas con cobro en ruta",
-    "orientation": "portrait-primary",
+    "orientation": "any",
     "prefer_related_applications": false,
     "icons": [
         {
@@ -31,5 +31,8 @@
             "type": "image/png",
             "purpose": "maskable"
         }
-    ]
+    ],
+    "id": "/",
+    "scope": "/",
+    "lang": "es"
 }
