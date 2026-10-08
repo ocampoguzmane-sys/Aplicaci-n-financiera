@@ -17,6 +17,8 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/*
 RUN curl -fsSL "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${FLUTTER_VERSION}-stable.tar.xz" | tar -xJ -C /opt
 ENV PATH=/opt/flutter/bin:$PATH CI=true FLUTTER_SUPPRESS_ANALYTICS=true
+# Flutter consulta su propio repositorio con git; sin esto git se niega a trabajar en la carpeta del SDK ("dubious ownership").
+RUN git config --global --add safe.directory /opt/flutter
 RUN flutter config --no-analytics >/dev/null 2>&1 && flutter precache --web
 WORKDIR /src/app
 COPY app/pubspec.yaml app/pubspec.lock ./

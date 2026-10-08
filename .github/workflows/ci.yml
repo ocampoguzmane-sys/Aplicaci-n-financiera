@@ -89,7 +89,7 @@ jobs:
           test "$uid" != "0"
       - name: Registro del contenedor (si algo falló)
         if: failure()
-        run: docker logs financiera
+        run: docker logs financiera || true
 
   android:
     name: Android (APK y AAB)
